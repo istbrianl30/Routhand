@@ -201,7 +201,7 @@ wss.on('connection', (ws) => {
 });
 
 // Serve index.html for any other routes (SPA fallback)
-app.get('(.*)', (req, res) => {
+app.get('*', (req, res) => {
     res.sendFile(path.join(distPath, 'index.html'));
 });
 
