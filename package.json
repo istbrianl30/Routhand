@@ -1,0 +1,28 @@
+{
+  "name": "routhand",
+  "version": "1.0.0",
+  "description": "Web-based router configuration app",
+  "main": "server/index.js",
+  "scripts": {
+    "dev": "concurrently \"vite\" \"node server/index.js\"",
+    "build": "vite build",
+    "server": "node server/index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "concurrently": "^9.2.1",
+    "express": "^5.2.1",
+    "node-arp": "^1.0.6",
+    "ssh2": "^1.17.0",
+    "ws": "^8.19.0"
+  },
+  "devDependencies": {
+    "@xterm/addon-fit": "^0.11.0",
+    "@xterm/xterm": "^6.0.0",
+    "vite": "^8.0.0",
+    "xterm": "^5.3.0"
+  }
+}
