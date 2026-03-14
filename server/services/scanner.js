@@ -50,37 +50,43 @@ function getMac(ip) {
  * Scan local network for active devices
  */
 async function scan() {
-    const subnet = getLocalSubnet();
-    const devices = [];
-    const promises = [];
+    try {
+        const subnet = getLocalSubnet();
+        console.log(`[Scanner] Starting sweep on ${subnet}.0/24`);
+        const devices = [];
+        const promises = [];
 
-    // Ping sweep the subnet
-    for (let i = 1; i <= 254; i++) {
-        const ip = `${subnet}.${i}`;
-        promises.push(
-            pingHost(ip).then(async (alive) => {
-                if (alive) {
-                    const mac = await getMac(ip);
-                    devices.push({
-                        ip,
-                        mac: mac || 'unknown',
-                        alive: true
-                    });
-                }
-            })
-        );
+        // Ping sweep the subnet (limited to first 254 to be safe)
+        for (let i = 1; i <= 254; i++) {
+            const ip = `${subnet}.${i}`;
+            promises.push(
+                pingHost(ip).then(async (alive) => {
+                    if (alive) {
+                        const mac = await getMac(ip);
+                        devices.push({
+                            ip,
+                            mac: mac || 'unknown',
+                            active: true
+                        });
+                    }
+                })
+            );
+        }
+
+        await Promise.all(promises);
+
+        // Sort by IP
+        devices.sort((a, b) => {
+            const aParts = a.ip.split('.').map(Number);
+            const bParts = b.ip.split('.').map(Number);
+            return aParts[3] - bParts[3];
+        });
+
+        return devices;
+    } catch (err) {
+        console.error('[Scanner] Error:', err);
+        throw err;
     }
-
-    await Promise.all(promises);
-
-    // Sort by IP
-    devices.sort((a, b) => {
-        const aParts = a.ip.split('.').map(Number);
-        const bParts = b.ip.split('.').map(Number);
-        return aParts[3] - bParts[3];
-    });
-
-    return devices;
 }
 
 module.exports = { scan };

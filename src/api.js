@@ -7,12 +7,19 @@
 const API_BASE = import.meta.env.VITE_API_URL || '';
 
 export function apiUrl(path) {
-    return `${API_BASE}${path}`;
+    const url = `${API_BASE}${path}`;
+    if (import.meta.env.DEV) {
+        console.log(`[API] Fetching: ${url}`);
+    }
+    return url;
 }
 
 export function wsUrl() {
-    const base = API_BASE || window.location.origin;
-    const url = new URL(base);
-    const proto = url.protocol === 'https:' ? 'wss' : 'ws';
-    return `${proto}://${url.host}/ws`;
+    if (API_BASE && (API_BASE.startsWith('http') || API_BASE.startsWith('//'))) {
+        const url = new URL(API_BASE.startsWith('//') ? window.location.protocol + API_BASE : API_BASE);
+        const proto = url.protocol === 'https:' ? 'wss' : 'ws';
+        return `${proto}://${url.host}/ws`;
+    }
+    const proto = window.location.protocol === 'https:' ? 'wss' : 'ws';
+    return `${proto}://${window.location.host}/ws`;
 }

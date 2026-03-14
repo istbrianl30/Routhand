@@ -42,6 +42,17 @@ export function renderScanner(container) {
 
     try {
       const res = await fetch(apiUrl('/api/scan'));
+
+      // Check if response is JSON
+      const contentType = res.headers.get('content-type');
+      if (!contentType || !contentType.includes('application/json')) {
+        const text = await res.text();
+        if (text.trim().startsWith('<')) {
+          throw new Error('Backend not found on this host. If you are on Netlify, you must deploy the backend separately and set VITE_API_URL.');
+        }
+        throw new Error('Server returned non-JSON response');
+      }
+
       const data = await res.json();
 
       if (data.success && data.devices.length > 0) {

@@ -200,8 +200,13 @@ wss.on('connection', (ws) => {
     });
 });
 
+// Serve index.html for any other routes (SPA fallback)
+app.get('*', (req, res) => {
+    res.sendFile(path.join(distPath, 'index.html'));
+});
+
 // --- Start server ---
 const PORT = process.env.PORT || 3001;
-server.listen(PORT, () => {
-    console.log(`\n  🚀 Routhand server running on http://localhost:${PORT}\n`);
+server.listen(PORT, '0.0.0.0', () => {
+    console.log(`\n  🚀 Routhand server running on http://0.0.0.0:${PORT}\n`);
 });

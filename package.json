@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "concurrently \"vite\" \"node server/index.js\"",
     "build": "vite build",
-    "server": "node server/index.js"
+    "server": "node server/index.js",
+    "start": "node server/index.js"
   },
   "keywords": [],
   "author": "",
